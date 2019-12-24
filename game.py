@@ -150,7 +150,7 @@ def draw_window(base,birds,pipes,score,gen):
     return screen
     
 GEN=0
-
+#paused=True
 def main(genomes,config):
     global GEN
     GEN+=1
@@ -177,7 +177,15 @@ def main(genomes,config):
     while run:
         clock.tick(30)
         screen=draw_window(base,birds,pipes,score,GEN)
-        
+# =============================================================================
+#         global paused
+#         while paused:
+#             paused=True
+#             for event in pygame.event.get():
+#                 if event.type==pygame.KEYDOWN:
+#                     if event.key==pygame.K_LEFT:
+#                         paused=False
+# =============================================================================
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
