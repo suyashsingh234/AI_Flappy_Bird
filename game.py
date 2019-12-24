@@ -125,22 +125,35 @@ class PIPE:
             return True
         return False
 
-def draw_window(base,birds,pipes,score):
+def draw_window(base,birds,pipes,score,gen):
     screen=pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
     pygame.display.set_caption("Flappy bird")
     screen.blit(BG_IMG,(0,0))
+    
     for bird in birds:
         bird.draw(screen)
     base.draw(screen)
-    score_text=SCORE_FONT.render("Score: "+str(score),30,(255,255,255))
     
-    screen.blit(score_text,(0,WIN_HEIGHT-score_text.get_height()))
     for pipe in pipes:
         pipe.draw(screen)
+        
+    score_text=SCORE_FONT.render("Score: "+str(score),30,(255,255,255))
+    screen.blit(score_text,(10,0))
+    
+    birds_text=SCORE_FONT.render("Birds alive: "+str(len(birds)),30,(255,255,255))
+    screen.blit(birds_text,(30+score_text.get_width(),0))
+    
+    gen_text=SCORE_FONT.render("Gen: "+str(gen),30,(255,255,255))
+    screen.blit(gen_text,(WIN_WIDTH-gen_text.get_width()-10,0))
+    
     pygame.display.update()
     return screen
     
+GEN=0
+
 def main(genomes,config):
+    global GEN
+    GEN+=1
     BASE_HEIGHT=100
     birds=[]
     X=30
@@ -163,7 +176,7 @@ def main(genomes,config):
     run=True
     while run:
         clock.tick(30)
-        screen=draw_window(base,birds,pipes,score)
+        screen=draw_window(base,birds,pipes,score,GEN)
         
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
@@ -172,12 +185,6 @@ def main(genomes,config):
                 quit()
           
         next_pipe=pipes[0]
-# =============================================================================
-#         for pipe in pipes:
-#             if not pipe.passed:
-#                 next_pipe=pipe
-#                 break
-# =============================================================================
           
         i=0    
         for bird in birds:
@@ -220,7 +227,6 @@ def run(config_file):
                           neat.DefaultSpeciesSet,neat.DefaultStagnation,
                           config_file)
         p = neat.Population(config)
-
     
         p.add_reporter(neat.StdOutReporter(True))
         stats = neat.StatisticsReporter()
